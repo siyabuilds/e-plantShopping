@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "./CartSlice";
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
   const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
+
+  // Access the Redux store to get cart items and calculate total quantity
+  const cartItems = useSelector((state) => state.cart.items);
+  const totalCartQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   const plantsArray = [
     {
@@ -326,7 +333,7 @@ function ProductList({ onHomeClick }) {
           <div>
             {" "}
             <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
-              <h1 className="cart">
+              <h1 className="cart" style={{ position: "relative" }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 256 256"
@@ -347,6 +354,27 @@ function ProductList({ onHomeClick }) {
                     id="mainIconPathAttribute"
                   ></path>
                 </svg>
+                {totalCartQuantity > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "0",
+                      right: "0",
+                      background: "#ff4444",
+                      color: "white",
+                      borderRadius: "50%",
+                      width: "25px",
+                      height: "25px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {totalCartQuantity}
+                  </span>
+                )}
               </h1>
             </a>
           </div>
